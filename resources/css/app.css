@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+.loader {
+    @apply w-full h-[10px] bg-transparent relative overflow-hidden;
+}
+
+.loader::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -70px;
+    width: 150%;
+    height: 100%;
+    background-image: linear-gradient(332deg, #6bff7f, #32ff3c);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: load 1s infinite;
+}
+
+@keyframes load {
+    50%{
+        transform: scaleX(1);
+    }
+
+    100%{
+        transform: scaleX(0);
+        transform-origin: right;
+    }
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #e5e5e5;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #bbbbbb;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #969696;
+}
+
+/* mini scroll */
+.mini-scroll::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+/* Track */
+.mini-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Handle */
+.mini-scroll::-webkit-scrollbar-thumb {
+    background: #bbbbbb;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+.mini-scroll::-webkit-scrollbar-thumb:hover {
+    background: #969696;
+}
