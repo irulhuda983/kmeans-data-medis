@@ -1,6 +1,11 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import TableCluster from '@/components/TableCluster.vue'
+import TableCluster from '@/components/TableCluster.vue';
+import LoadingTable from "@/components/LoadingTable.vue";
+import { useNotification } from "@kyvg/vue3-notification";
+const { notify } = useNotification();
+
+const loading = ref(false)
 
 const dataCluster = ref([])
 const dataAwal = ref([])
@@ -11,6 +16,7 @@ const kesimpulanCLuster = ref([])
 const pageView = ref('data_awal')
 
 const fetchData = async () => {
+    loading.value = true
     try{
         const { data } = await axios.get('clustering/get-by-nama');
 
@@ -20,7 +26,18 @@ const fetchData = async () => {
         lastCentroid.value = data.last_centroid
         kesimpulanCLuster.value = data.jumlah_cluster
     }catch(e) {
-        console.log(e)
+        if(e.response.status == 401) {
+            localStorage.removeItem('TOKEN')
+            location.reload()
+        }else{
+            notify({
+                text: "Failed load data, Server is Maintenent",
+                type: 'error',
+                duration: 2000
+            })
+        }
+    }finally{
+        loading.value = false
     }
 }
 
@@ -67,26 +84,29 @@ onMounted(() => {
             </div>
         </div>
         <div class="w-full mb-5">
-            <table v-if="pageView == 'data_awal'" class="w-full text-sm text-left bg-[#2F2B43]">
-                <thead class="text-xs text-gray-400 bg-[#3B3955] uppercase border-b border-[#3A3650]">
-                    <tr>
-                        <th scope="col" class="px-4 py-3 w-[10px]">No</th>
-                        <th scope="col" class="px-4 py-3">Nama</th>
-                        <th scope="col" class="px-4 py-3">Jenis Umur</th>
-                        <th scope="col" class="px-4 py-3 w-[20]">Jenis Penyakit</th>
-                        <th scope="col" class="px-4 py-3">Jenis Pelayanan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(item, i) in dataAwal" :key="i" class="text-sm font-semibold cursor-pointer border-b bg-[#2F2B43] border-[#3A3650] text-[#9D9AB7]">
-                        <td class="px-4 py-3 whitespace-nowrap">{{ i + 1 }}</td>
-                        <td class="px-4 py-3 whitespace-nowrap">{{ item.nama }}</td>
-                        <td class="px-4 py-3 whitespace-nowrap">{{ item.umur }} th ({{ item.jenis_umur }})</td>
-                        <td class="px-4 py-3 whitespace-nowrap capitalize">{{ item.nama_penyakit }} ({{ item.jenis_penyakit }})</td>
-                        <td class="px-4 py-3 whitespace-nowrap capitalize">{{ item.nama_pelayanan.replace('_', ' ') }} ({{ item.jenis_pelayanan }})</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div v-if="pageView == 'data_awal'">
+                <LoadingTable v-if="loading" :fields="['no', 'nama', 'jenis umur', 'jenis penyakit', 'jenis pelayanan']" />
+                <table v-else class="w-full text-sm text-left bg-[#2F2B43]">
+                    <thead class="text-xs text-gray-400 bg-[#3B3955] uppercase border-b border-[#3A3650]">
+                        <tr>
+                            <th scope="col" class="px-4 py-3 w-[10px]">No</th>
+                            <th scope="col" class="px-4 py-3">Nama</th>
+                            <th scope="col" class="px-4 py-3">Jenis Umur</th>
+                            <th scope="col" class="px-4 py-3 w-[20]">Jenis Penyakit</th>
+                            <th scope="col" class="px-4 py-3">Jenis Pelayanan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, i) in dataAwal" :key="i" class="text-sm font-semibold cursor-pointer border-b bg-[#2F2B43] border-[#3A3650] text-[#9D9AB7]">
+                            <td class="px-4 py-3 whitespace-nowrap">{{ i + 1 }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">{{ item.nama }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">{{ item.umur }} th ({{ item.jenis_umur }})</td>
+                            <td class="px-4 py-3 whitespace-nowrap capitalize">{{ item.nama_penyakit }} ({{ item.jenis_penyakit }})</td>
+                            <td class="px-4 py-3 whitespace-nowrap capitalize">{{ item.nama_pelayanan.replace('_', ' ') }} ({{ item.jenis_pelayanan }})</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <div v-if="pageView == 'data_iterasi'">
                 <TableCluster v-for="(cls, i) in dataCluster" :key="i" :data="cls" />

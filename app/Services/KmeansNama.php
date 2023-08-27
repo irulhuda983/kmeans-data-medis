@@ -72,7 +72,10 @@ class KmeansNama {
         $jumlahc2 = $collect->where('cluster', 2)->count();
         $jumlahc3 = $collect->where('cluster', 3)->count();
 
+        $chartScatter = $this->getChartScatter($last_iterasi['data_iterasi']);
+
         return [
+            'data_chart' => $chartScatter,
             'data_awal' => $data,
             'data_cluster' => $dataCluster,
             'last_cluster' => $last_iterasi['data_iterasi'],
@@ -266,5 +269,37 @@ class KmeansNama {
         }
 
         return false;
+    }
+
+    public function getChartScatter($data)
+    {
+        $c1 = [];
+        $c2 = [];
+        $c3 = [];
+
+        foreach($data as $item){
+            if($item['cluster'] == 1){
+                array_push($c1, [ round($item['c1'], 2), round($item['c2'], 2), round($item['c3'], 2)]);
+            }else if($item['cluster'] == 2){
+                array_push($c2, [ round($item['c2'], 2), round($item['c3'], 2), round($item['c1'], 2)]);
+            }else if($item['cluster'] == 3){
+                array_push($c3, [ round($item['c3'], 2), round($item['c1'], 2), round($item['c2'], 2)]);
+            }
+        }
+
+        return [
+            [
+                'name' => 'Claster 1',
+                'data' => $c1
+            ],
+            [
+                'name' => 'Claster 2',
+                'data' => $c2
+            ],
+            [
+                'name' => 'Claster 3',
+                'data' => $c3
+            ],
+        ];
     }
 }
