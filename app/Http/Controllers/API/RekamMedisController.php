@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\RekamMedis;
 use App\Http\Resources\RekamMedisResource;
 use App\Imports\RekamMedisImport;
+use App\Exports\RekamMedisExport;
 use App\Models\JenisUmur;
 
 class RekamMedisController extends Controller
@@ -90,6 +91,11 @@ class RekamMedisController extends Controller
         Excel::import(new RekamMedisImport, $path);
         
         return response()->json(['message' => 'success']);
+    }
+
+    public function export() 
+    {
+        return Excel::download(new RekamMedisExport, 'data-rekam-medis-'.time().'.xlsx');
     }
 
     public function update(Request $request, RekamMedis $rekam)

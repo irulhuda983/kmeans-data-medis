@@ -3,6 +3,7 @@ import Logo from "@/assets/logo.png"
 import AppsIcon from "@/components/icons/Apps.vue"
 import MedisIcon from "@/components/icons/Medis.vue"
 import ClusterIcon from "@/components/icons/Cluster.vue"
+import GrafikIcon from "@/components/icons/Chart.vue"
 import UsersIcon from "@/components/icons/Users.vue"
 
 import { useRouter, useRoute } from 'vue-router'
@@ -51,6 +52,16 @@ const route = useRoute()
                 >
                     <div class="w-5 h-5">
                         <ClusterIcon/>
+                    </div>
+                </router-link>
+
+                <router-link
+                    :to="{ name: 'grafik' }"
+                    class="flex items-center justify-center rounded-lg lg:rounded-full p-2 box-border lg:mb-3"
+                    :class="route.meta.menu == 'grafik' ? 'text-white bg-[#7939FC]' : 'text-gray-400 hover:text-white' "
+                >
+                    <div class="w-5 h-5">
+                        <GrafikIcon/>
                     </div>
                 </router-link>
 

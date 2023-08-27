@@ -30,6 +30,12 @@ const routes = [
                 component: () => import('@/pages/Cluster/Main.vue'),
             },
             {
+                meta: { title: "Grafik", menu: 'grafik' },
+                path: "/grafik",
+                name: "grafik",
+                component: () => import('@/pages/Chart/Main.vue'),
+            },
+            {
                 meta: { title: "Users", menu: 'users' },
                 path: "/users",
                 name: "users",

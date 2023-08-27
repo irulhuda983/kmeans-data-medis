@@ -13,8 +13,12 @@ class ManageUserController extends Controller
     
     public function index(Request $request)
     {
-        $query = User::paginate($request->limit ?? 10);
+        $search = $request->search ?? null;
+        list($order, $dir) = explode(':', $request->order ?? 'created_at:desc');
+        $limit = $request->limit ?? 10;
 
-        return UserResource::collection($query);
+
+        $query = User::search($search)->where('role', 'admin')->orderBy($order, $dir);
+        return UserResource::collection( $query->paginate($limit) );
     }
 }

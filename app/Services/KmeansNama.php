@@ -39,7 +39,8 @@ class KmeansNama {
                 array_push($dataCluster, [
                     'nama' => 'iterasi ke '.($i + 1),
                     'data_iterasi' => $iterasi['data'],
-                    'centroid' => $centroid
+                    'centroid' => $centroid,
+                    'grafik' => $this->getChartScatter($iterasi['data']),
                 ]);
 
                 $centroid = $iterasi['centroid'];
@@ -55,7 +56,8 @@ class KmeansNama {
                 array_push($dataCluster, [
                     'nama' => 'iterasi ke '.($i + 1),
                     'data_iterasi' => $iterasi['data'],
-                    'centroid' => $centroid
+                    'centroid' => $centroid,
+                    'grafik' => $this->getChartScatter($iterasi['data']),
                 ]);
 
                 $centroid = $iterasi['centroid'];

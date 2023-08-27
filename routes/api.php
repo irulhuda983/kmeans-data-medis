@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\RekamMedisController;
 use App\Http\Controllers\API\ClusterController;
+use App\Http\Controllers\API\ManageUserController;
 use App\Http\Controllers\API\OptionsController;
 
 /*
@@ -41,13 +42,27 @@ Route::prefix('rekam-medis')
     Route::get('/{rekam}/show', 'show');
     Route::post('/', 'store');
     Route::post('/import', 'import');
+    Route::post('/export', 'export');
     Route::post('/{rekam}/update', 'update');
     Route::delete('/{rekam}/delete', 'destroy');
 });
 
+Route::prefix('manage-user')
+->controller(ManageUserController::class)
+->middleware('auth:sanctum')
+->group(function () {
+    Route::get('/', 'index');
+    // Route::get('/{rekam}/show', 'show');
+    // Route::post('/', 'store');
+    // Route::post('/import', 'import');
+    // Route::post('/export', 'export');
+    // Route::post('/{rekam}/update', 'update');
+    // Route::delete('/{rekam}/delete', 'destroy');
+});
+
 Route::prefix('clustering')
 ->controller(ClusterController::class)
-// ->middleware('auth:sanctum')
+->middleware('auth:sanctum')
 ->group(function () {
     Route::get('/get-by-tanggal', 'getClusterByTanggal');
     Route::get('/get-by-nama', 'getClusterByNamaPasien');

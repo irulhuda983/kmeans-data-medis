@@ -3,6 +3,7 @@ import { ref, reactive, onMounted } from 'vue';
 
 import AddIcon from '@/components/icons/Add.vue';
 import UploadsIcon from '@/components/icons/Uploads.vue';
+import DownloadIcon from '@/components/icons/Download.vue';
 import Modal from '@/components/Modal.vue';
 import Pagination from "@/components/Pagination.vue";
 import LoadingBar from "@/components/LoadingBar.vue";
@@ -242,6 +243,21 @@ const uploadData = async () => {
     }
 }
 
+const exportData = () => {
+    axios({
+        url: '/rekam-medis/export',
+        method: 'POST',
+        responseType: 'blob', // important
+    }).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'rekam-medis.xlsx');
+        document.body.appendChild(link);
+        link.click();
+    });
+}
+
 const updateData = async () => {
     loadingSave.value = true
     try{
@@ -365,6 +381,13 @@ onMounted(() => {
                 >
                     <div class="w-4 h-4 mr-2"><UploadsIcon/></div>
                     <div>Uploads</div>
+                </button>
+                <button
+                    @click.prevent="exportData()"
+                    class="flex items-center justify-center bg-[#342855] border border-[#7939FC] border-r-transparent p-2 box-border text-sm font-semibold text-gray-400 hover:text-white hover:bg-[#7939FC]"
+                >
+                    <div class="w-4 h-4 mr-2"><DownloadIcon/></div>
+                    <div>Download</div>
                 </button>
                 <button
                     @click.prevent="modalAdd.open = true"
@@ -584,7 +607,7 @@ onMounted(() => {
 
             </div>
             <div class="flex items-center justify-between">
-              <a href="#" @click.prevent="downloadFile()" class="px-4 text-sm">Download contoh</a>
+              <a href="/contoh_upload_rekam_medis.xlsx" class="px-4 text-sm">Download contoh</a>
               <div class="flex justify-end items-center space-x-3 box-border px-4 py-2">
                 <button
                   @click.prevent="uploadData"
