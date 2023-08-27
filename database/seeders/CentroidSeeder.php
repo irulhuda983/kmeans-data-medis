@@ -17,16 +17,16 @@ class CentroidSeeder extends Seeder
         
         Centroid::create([
             'nama' => 'rawat_inap',
-            'k1' => 2,
-            'k2' => 4,
-            'k3' => 6
+            'k1' => 6,
+            'k2' => 12,
+            'k3' => 18
         ]);
 
         Centroid::create([
             'nama' => 'rawat_jalan',
-            'k1' => 2,
-            'k2' => 4,
-            'k3' => 6
+            'k1' => 6,
+            'k2' => 12,
+            'k3' => 18
         ]);
     }
 }
