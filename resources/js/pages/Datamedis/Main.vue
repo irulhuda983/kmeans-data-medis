@@ -23,6 +23,7 @@ const modalAdd = ref()
 const modalUpload = ref()
 const modalUpdate = ref()
 const modalDelete = ref()
+const modalTruncate = ref()
 
 const file = ref()
 const errorFile = ref(null)
@@ -135,6 +136,14 @@ const openModalDelete = (id) => {
 const closeModalDelete = () => {
     payload.id = ''
     modalDelete.value.open = false
+}
+
+const openModalTruncate = () => {
+    modalTruncate.value.open = true
+}
+
+const closeModalTruncate = () => {
+    modalTruncate.value.open = false
 }
 // modal
 
@@ -314,6 +323,27 @@ const deleteData = async () => {
         loadingSave.value = false
     }
 }
+
+const truncateData = async () => {
+    loadingSave.value = true
+    try{
+        const { data } = await axios.delete(`/rekam-medis/truncate`)
+        fetchData()
+        closeModalTruncate()
+        notify({
+            text: "Data Rekam Medis berhasil kosongkan",
+            type: 'success',
+            duration: 2000
+        })
+    }catch(e) {
+        if(e.response.status == 401) {
+            localStorage.removeItem('TOKEN')
+            location.reload()
+        }
+    }finally{
+        loadingSave.value = false
+    }
+}
 // end crud
 
 const readFile = () => {
@@ -357,7 +387,7 @@ onMounted(() => {
 
 <template>
     <div class="box-border w-full">
-        <div class="w-full box-border my-8 flex items-center justify-between">
+        <div class="w-full box-border my-8 flex lg:items-center lg:justify-between flex-col-reverse lg:flex-row">
             <div class="w-full lg:w-1/2">
             <!-- <form @submit.prevent="serachNrkb()"> -->
                 <div class="w-full box-border relative flex items-center justify-center">
@@ -374,7 +404,7 @@ onMounted(() => {
                 </div>
             <!-- </form> -->
             </div>
-            <div class="flex items-center justify-center">
+            <div class="flex items-center lg:justify-center mb-5">
                 <button
                     @click.prevent="modalUpload.open = true"
                     class="flex items-center justify-center bg-[#342855] border border-[#7939FC] border-r-transparent p-2 box-border text-sm font-semibold text-gray-400 hover:text-white hover:bg-[#7939FC]"
@@ -391,10 +421,20 @@ onMounted(() => {
                 </button>
                 <button
                     @click.prevent="modalAdd.open = true"
-                    class="flex items-center justify-center bg-[#342855] border border-[#7939FC] p-2 box-border text-sm font-semibold text-gray-400 hover:text-white hover:bg-[#7939FC]"
+                    class="flex items-center justify-center bg-[#342855] border border-[#7939FC] border-r-transparent p-2 box-border text-sm font-semibold text-gray-400 hover:text-white hover:bg-[#7939FC]"
                 >
                     <div class="w-4 h-4 mr-2"><AddIcon/></div>
                     <div>Tambah</div>
+                </button>
+                <button
+                    @click.prevent="modalTruncate.open = true"
+                    class="flex items-center justify-center bg-[#342855] border border-[#7939FC] p-2 box-border text-sm font-semibold text-gray-400 hover:text-white hover:bg-[#7939FC]"
+                >
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4 mr-2 text-red-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                    <div>Kosongkan</div>
                 </button>
             </div>
         </div>
@@ -773,6 +813,67 @@ onMounted(() => {
                         </button>
                         <button
                             @click.prevent="closeModalDelete"
+                            class="px-4 py-2 rounded bg-red-500 text-white text-xs font-semibold border border-red-500 hover:bg-transparent hover:text-red-500"
+                        >
+                        Batal
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </template>
+    </Modal>
+    <!-- end modal delete -->
+
+    <!-- modal delete -->
+    <Modal ref="modalTruncate">
+      <template v-slot:modal-body>
+        <div class="w-full bg-gray-900 text-[#EFECFD] relative overflow-hidden">
+            <LoadingBar v-if="loadingSave" />
+            <div class="w-full">
+                <div class="bg-gray-900 font-semibold text-xl box-border w-full p-4">Kosongkan Data</div>
+                <div class="w-full bg-transparent p-4">
+                    <div class="w-full flex space-x-5">
+                        <div
+                            class="flex-none w-20 h-20 rounded bg-red-700 text-white flex items-center justify-center"
+                        >
+                            <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-16 w-16"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                            </svg>
+                        </div>
+
+                        <div class="flex-1">
+                            <div class="mb-3 text-base font-semibold">
+                            Apakah Anda yakin ingin mengkosongkan data rekam medis ?
+                            </div>
+                            <div class="mb-3 text-sm">
+                                Data yang dihapus tidak bisa akan hilang secara permanen, apa anda
+                                ingin melanjutkan ?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-4 bg-gray-900">
+                    <div class="flex justify-end items-center space-x-3 box-border px-4 py-2">
+                        <button
+                            @click.prevent="truncateData"
+                            class="px-4 py-2 rounded bg-indigo-600 text-white text-xs font-semibold border border-indigo-600 hover:bg-transparent hover:text-indigo-600"
+                        >
+                            Ya, Kosongkan
+                        </button>
+                        <button
+                            @click.prevent="closeModalTruncate()"
                             class="px-4 py-2 rounded bg-red-500 text-white text-xs font-semibold border border-red-500 hover:bg-transparent hover:text-red-500"
                         >
                         Batal

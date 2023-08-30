@@ -45,6 +45,7 @@ Route::prefix('rekam-medis')
     Route::post('/export', 'export');
     Route::post('/{rekam}/update', 'update');
     Route::delete('/{rekam}/delete', 'destroy');
+    Route::delete('/truncate', 'truncate');
 });
 
 Route::prefix('manage-user')
@@ -52,8 +53,10 @@ Route::prefix('manage-user')
 ->middleware('auth:sanctum')
 ->group(function () {
     Route::get('/', 'index');
-    // Route::get('/{rekam}/show', 'show');
-    // Route::post('/', 'store');
+    Route::get('/{user}/show', 'show');
+    Route::post('/', 'store');
+    Route::post('/{user}/update', 'update');
+    Route::delete('/{user}/delete', 'destroy');
     // Route::post('/import', 'import');
     // Route::post('/export', 'export');
     // Route::post('/{rekam}/update', 'update');

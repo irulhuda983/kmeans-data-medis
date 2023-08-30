@@ -163,4 +163,13 @@ class RekamMedisController extends Controller
             return response()->json(['message' => $e->getMessage(), 'data' => null], 500);
         }
     }
+
+    public function truncate(Request $request)
+    {
+        RekamMedis::truncate();
+        return response()->json([
+            'message' => 'success',
+            'data' => null
+        ], 200);
+    }
 }

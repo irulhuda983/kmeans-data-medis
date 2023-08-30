@@ -1,1 +1,0 @@
-import{_ as o}from"./_plugin-vue_export-helper-c27b6911.js";import{o as e,c as s,a as c}from"./app-28aa7058.js";const t={},a={class:"w-full h-full absolute top-0 bg-black/30 backdrop-blur-lg z-10"},r=c("div",{class:"loader"},null,-1),l=[r];function n(_,d){return e(),s("div",a,l)}const p=o(t,[["render",n]]);export{p as L};

@@ -25,8 +25,8 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $item->kode }}</td>
-                <td>{{ $item->nama }}</td>
                 <td>{{ $item->tanggal ? date('Y-m-d', strtotime($item->tanggal)) : '' }}</td>
+                <td>{{ $item->nama }}</td>
                 <td>{{ $item->jenis_kelamin }}</td>
                 <td>{{ $item->umur }}</td>
                 <td>{{ optional($item->jenisUmur)->nama }}</td>
